@@ -1,0 +1,16 @@
+//1、连接服务器
+//2、鉴权
+//3、登录（可免）
+//4、进入群组（可免）
+//5、获取在线列表
+//6、聊天
+syntax = "proto2";
+//package tio;
+// 引入外部的proto对象
+//import "google/protobuf/any.proto";
+option java_package = "top.alvinsite.chat.common.packets";  //设置java对应的package
+option java_multiple_files = true;                           //建议设置为true，这样会每个对象放在一个文件中，否则所有对象都在一个java文件中
+
+message ChatMessage {
+	required int32 type = 1;
+}
