@@ -11,6 +11,29 @@ syntax = "proto2";
 option java_package = "top.alvinsite.chat.common.packets";  //设置java对应的package
 option java_multiple_files = true;                           //建议设置为true，这样会每个对象放在一个文件中，否则所有对象都在一个java文件中
 
+enum MessageType {
+	LOGIN_REQ = 1;
+	LOGIN_RESP = 2;
+	HEARTBEAT_REQ = 3;
+	HEARTBEAT_RESP = 4;
+	CHAT_REQ = 5;
+	CHAT_RESP = 6;
+	LOGOUT_REQ = 7;
+	LOGOUT_RESP = 8;
+	OTHERS = 10;
+	;
+}
+
+enum ReceiverType {
+	SYSTEM = 1;
+	USER = 2;
+	GROUP = 3;
+}
+
 message ChatMessage {
-	required int32 type = 1;
+	required MessageType type = 1;
+	required ReceiverType receiverType = 2;
+	optional string receiver = 5;
+	optional string content = 6;
+
 }

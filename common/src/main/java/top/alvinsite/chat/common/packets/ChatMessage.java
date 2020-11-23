@@ -15,7 +15,10 @@ public  final class ChatMessage extends
     super(builder);
   }
   private ChatMessage() {
-    type_ = 0;
+    type_ = 1;
+    receiverType_ = 1;
+    receiver_ = "";
+    content_ = "";
   }
 
   @java.lang.Override
@@ -47,8 +50,37 @@ public  final class ChatMessage extends
             break;
           }
           case 8: {
-            bitField0_ |= 0x00000001;
-            type_ = input.readInt32();
+            int rawValue = input.readEnum();
+            top.alvinsite.chat.common.packets.MessageType value = top.alvinsite.chat.common.packets.MessageType.valueOf(rawValue);
+            if (value == null) {
+              unknownFields.mergeVarintField(1, rawValue);
+            } else {
+              bitField0_ |= 0x00000001;
+              type_ = rawValue;
+            }
+            break;
+          }
+          case 16: {
+            int rawValue = input.readEnum();
+            top.alvinsite.chat.common.packets.ReceiverType value = top.alvinsite.chat.common.packets.ReceiverType.valueOf(rawValue);
+            if (value == null) {
+              unknownFields.mergeVarintField(2, rawValue);
+            } else {
+              bitField0_ |= 0x00000002;
+              receiverType_ = rawValue;
+            }
+            break;
+          }
+          case 42: {
+            com.google.protobuf.ByteString bs = input.readBytes();
+            bitField0_ |= 0x00000004;
+            receiver_ = bs;
+            break;
+          }
+          case 50: {
+            com.google.protobuf.ByteString bs = input.readBytes();
+            bitField0_ |= 0x00000008;
+            content_ = bs;
             break;
           }
         }
@@ -79,16 +111,117 @@ public  final class ChatMessage extends
   public static final int TYPE_FIELD_NUMBER = 1;
   private int type_;
   /**
-   * <code>required int32 type = 1;</code>
+   * <code>required .MessageType type = 1;</code>
    */
   public boolean hasType() {
     return ((bitField0_ & 0x00000001) == 0x00000001);
   }
   /**
-   * <code>required int32 type = 1;</code>
+   * <code>required .MessageType type = 1;</code>
    */
-  public int getType() {
-    return type_;
+  public top.alvinsite.chat.common.packets.MessageType getType() {
+    top.alvinsite.chat.common.packets.MessageType result = top.alvinsite.chat.common.packets.MessageType.valueOf(type_);
+    return result == null ? top.alvinsite.chat.common.packets.MessageType.LOGIN_REQ : result;
+  }
+
+  public static final int RECEIVERTYPE_FIELD_NUMBER = 2;
+  private int receiverType_;
+  /**
+   * <code>required .ReceiverType receiverType = 2;</code>
+   */
+  public boolean hasReceiverType() {
+    return ((bitField0_ & 0x00000002) == 0x00000002);
+  }
+  /**
+   * <code>required .ReceiverType receiverType = 2;</code>
+   */
+  public top.alvinsite.chat.common.packets.ReceiverType getReceiverType() {
+    top.alvinsite.chat.common.packets.ReceiverType result = top.alvinsite.chat.common.packets.ReceiverType.valueOf(receiverType_);
+    return result == null ? top.alvinsite.chat.common.packets.ReceiverType.SYSTEM : result;
+  }
+
+  public static final int RECEIVER_FIELD_NUMBER = 5;
+  private volatile java.lang.Object receiver_;
+  /**
+   * <code>optional string receiver = 5;</code>
+   */
+  public boolean hasReceiver() {
+    return ((bitField0_ & 0x00000004) == 0x00000004);
+  }
+  /**
+   * <code>optional string receiver = 5;</code>
+   */
+  public java.lang.String getReceiver() {
+    java.lang.Object ref = receiver_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      if (bs.isValidUtf8()) {
+        receiver_ = s;
+      }
+      return s;
+    }
+  }
+  /**
+   * <code>optional string receiver = 5;</code>
+   */
+  public com.google.protobuf.ByteString
+      getReceiverBytes() {
+    java.lang.Object ref = receiver_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      receiver_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
+  }
+
+  public static final int CONTENT_FIELD_NUMBER = 6;
+  private volatile java.lang.Object content_;
+  /**
+   * <code>optional string content = 6;</code>
+   */
+  public boolean hasContent() {
+    return ((bitField0_ & 0x00000008) == 0x00000008);
+  }
+  /**
+   * <code>optional string content = 6;</code>
+   */
+  public java.lang.String getContent() {
+    java.lang.Object ref = content_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      if (bs.isValidUtf8()) {
+        content_ = s;
+      }
+      return s;
+    }
+  }
+  /**
+   * <code>optional string content = 6;</code>
+   */
+  public com.google.protobuf.ByteString
+      getContentBytes() {
+    java.lang.Object ref = content_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      content_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
   }
 
   private byte memoizedIsInitialized = -1;
@@ -101,6 +234,10 @@ public  final class ChatMessage extends
       memoizedIsInitialized = 0;
       return false;
     }
+    if (!hasReceiverType()) {
+      memoizedIsInitialized = 0;
+      return false;
+    }
     memoizedIsInitialized = 1;
     return true;
   }
@@ -108,7 +245,16 @@ public  final class ChatMessage extends
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
     if (((bitField0_ & 0x00000001) == 0x00000001)) {
-      output.writeInt32(1, type_);
+      output.writeEnum(1, type_);
+    }
+    if (((bitField0_ & 0x00000002) == 0x00000002)) {
+      output.writeEnum(2, receiverType_);
+    }
+    if (((bitField0_ & 0x00000004) == 0x00000004)) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 5, receiver_);
+    }
+    if (((bitField0_ & 0x00000008) == 0x00000008)) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 6, content_);
     }
     unknownFields.writeTo(output);
   }
@@ -120,7 +266,17 @@ public  final class ChatMessage extends
     size = 0;
     if (((bitField0_ & 0x00000001) == 0x00000001)) {
       size += com.google.protobuf.CodedOutputStream
-        .computeInt32Size(1, type_);
+        .computeEnumSize(1, type_);
+    }
+    if (((bitField0_ & 0x00000002) == 0x00000002)) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeEnumSize(2, receiverType_);
+    }
+    if (((bitField0_ & 0x00000004) == 0x00000004)) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, receiver_);
+    }
+    if (((bitField0_ & 0x00000008) == 0x00000008)) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(6, content_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -141,8 +297,21 @@ public  final class ChatMessage extends
     boolean result = true;
     result = result && (hasType() == other.hasType());
     if (hasType()) {
-      result = result && (getType()
-          == other.getType());
+      result = result && type_ == other.type_;
+    }
+    result = result && (hasReceiverType() == other.hasReceiverType());
+    if (hasReceiverType()) {
+      result = result && receiverType_ == other.receiverType_;
+    }
+    result = result && (hasReceiver() == other.hasReceiver());
+    if (hasReceiver()) {
+      result = result && getReceiver()
+          .equals(other.getReceiver());
+    }
+    result = result && (hasContent() == other.hasContent());
+    if (hasContent()) {
+      result = result && getContent()
+          .equals(other.getContent());
     }
     result = result && unknownFields.equals(other.unknownFields);
     return result;
@@ -157,7 +326,19 @@ public  final class ChatMessage extends
     hash = (19 * hash) + getDescriptorForType().hashCode();
     if (hasType()) {
       hash = (37 * hash) + TYPE_FIELD_NUMBER;
-      hash = (53 * hash) + getType();
+      hash = (53 * hash) + type_;
+    }
+    if (hasReceiverType()) {
+      hash = (37 * hash) + RECEIVERTYPE_FIELD_NUMBER;
+      hash = (53 * hash) + receiverType_;
+    }
+    if (hasReceiver()) {
+      hash = (37 * hash) + RECEIVER_FIELD_NUMBER;
+      hash = (53 * hash) + getReceiver().hashCode();
+    }
+    if (hasContent()) {
+      hash = (37 * hash) + CONTENT_FIELD_NUMBER;
+      hash = (53 * hash) + getContent().hashCode();
     }
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
@@ -277,8 +458,14 @@ public  final class ChatMessage extends
     }
     public Builder clear() {
       super.clear();
-      type_ = 0;
+      type_ = 1;
       bitField0_ = (bitField0_ & ~0x00000001);
+      receiverType_ = 1;
+      bitField0_ = (bitField0_ & ~0x00000002);
+      receiver_ = "";
+      bitField0_ = (bitField0_ & ~0x00000004);
+      content_ = "";
+      bitField0_ = (bitField0_ & ~0x00000008);
       return this;
     }
 
@@ -307,6 +494,18 @@ public  final class ChatMessage extends
         to_bitField0_ |= 0x00000001;
       }
       result.type_ = type_;
+      if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+        to_bitField0_ |= 0x00000002;
+      }
+      result.receiverType_ = receiverType_;
+      if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+        to_bitField0_ |= 0x00000004;
+      }
+      result.receiver_ = receiver_;
+      if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
+        to_bitField0_ |= 0x00000008;
+      }
+      result.content_ = content_;
       result.bitField0_ = to_bitField0_;
       onBuilt();
       return result;
@@ -352,6 +551,19 @@ public  final class ChatMessage extends
       if (other.hasType()) {
         setType(other.getType());
       }
+      if (other.hasReceiverType()) {
+        setReceiverType(other.getReceiverType());
+      }
+      if (other.hasReceiver()) {
+        bitField0_ |= 0x00000004;
+        receiver_ = other.receiver_;
+        onChanged();
+      }
+      if (other.hasContent()) {
+        bitField0_ |= 0x00000008;
+        content_ = other.content_;
+        onChanged();
+      }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
       return this;
@@ -359,6 +571,9 @@ public  final class ChatMessage extends
 
     public final boolean isInitialized() {
       if (!hasType()) {
+        return false;
+      }
+      if (!hasReceiverType()) {
         return false;
       }
       return true;
@@ -383,34 +598,226 @@ public  final class ChatMessage extends
     }
     private int bitField0_;
 
-    private int type_ ;
+    private int type_ = 1;
     /**
-     * <code>required int32 type = 1;</code>
+     * <code>required .MessageType type = 1;</code>
      */
     public boolean hasType() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
     /**
-     * <code>required int32 type = 1;</code>
+     * <code>required .MessageType type = 1;</code>
      */
-    public int getType() {
-      return type_;
+    public top.alvinsite.chat.common.packets.MessageType getType() {
+      top.alvinsite.chat.common.packets.MessageType result = top.alvinsite.chat.common.packets.MessageType.valueOf(type_);
+      return result == null ? top.alvinsite.chat.common.packets.MessageType.LOGIN_REQ : result;
     }
     /**
-     * <code>required int32 type = 1;</code>
+     * <code>required .MessageType type = 1;</code>
      */
-    public Builder setType(int value) {
+    public Builder setType(top.alvinsite.chat.common.packets.MessageType value) {
+      if (value == null) {
+        throw new NullPointerException();
+      }
       bitField0_ |= 0x00000001;
-      type_ = value;
+      type_ = value.getNumber();
       onChanged();
       return this;
     }
     /**
-     * <code>required int32 type = 1;</code>
+     * <code>required .MessageType type = 1;</code>
      */
     public Builder clearType() {
       bitField0_ = (bitField0_ & ~0x00000001);
-      type_ = 0;
+      type_ = 1;
+      onChanged();
+      return this;
+    }
+
+    private int receiverType_ = 1;
+    /**
+     * <code>required .ReceiverType receiverType = 2;</code>
+     */
+    public boolean hasReceiverType() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    /**
+     * <code>required .ReceiverType receiverType = 2;</code>
+     */
+    public top.alvinsite.chat.common.packets.ReceiverType getReceiverType() {
+      top.alvinsite.chat.common.packets.ReceiverType result = top.alvinsite.chat.common.packets.ReceiverType.valueOf(receiverType_);
+      return result == null ? top.alvinsite.chat.common.packets.ReceiverType.SYSTEM : result;
+    }
+    /**
+     * <code>required .ReceiverType receiverType = 2;</code>
+     */
+    public Builder setReceiverType(top.alvinsite.chat.common.packets.ReceiverType value) {
+      if (value == null) {
+        throw new NullPointerException();
+      }
+      bitField0_ |= 0x00000002;
+      receiverType_ = value.getNumber();
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>required .ReceiverType receiverType = 2;</code>
+     */
+    public Builder clearReceiverType() {
+      bitField0_ = (bitField0_ & ~0x00000002);
+      receiverType_ = 1;
+      onChanged();
+      return this;
+    }
+
+    private java.lang.Object receiver_ = "";
+    /**
+     * <code>optional string receiver = 5;</code>
+     */
+    public boolean hasReceiver() {
+      return ((bitField0_ & 0x00000004) == 0x00000004);
+    }
+    /**
+     * <code>optional string receiver = 5;</code>
+     */
+    public java.lang.String getReceiver() {
+      java.lang.Object ref = receiver_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          receiver_ = s;
+        }
+        return s;
+      } else {
+        return (java.lang.String) ref;
+      }
+    }
+    /**
+     * <code>optional string receiver = 5;</code>
+     */
+    public com.google.protobuf.ByteString
+        getReceiverBytes() {
+      java.lang.Object ref = receiver_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        receiver_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <code>optional string receiver = 5;</code>
+     */
+    public Builder setReceiver(
+        java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000004;
+      receiver_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>optional string receiver = 5;</code>
+     */
+    public Builder clearReceiver() {
+      bitField0_ = (bitField0_ & ~0x00000004);
+      receiver_ = getDefaultInstance().getReceiver();
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>optional string receiver = 5;</code>
+     */
+    public Builder setReceiverBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000004;
+      receiver_ = value;
+      onChanged();
+      return this;
+    }
+
+    private java.lang.Object content_ = "";
+    /**
+     * <code>optional string content = 6;</code>
+     */
+    public boolean hasContent() {
+      return ((bitField0_ & 0x00000008) == 0x00000008);
+    }
+    /**
+     * <code>optional string content = 6;</code>
+     */
+    public java.lang.String getContent() {
+      java.lang.Object ref = content_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          content_ = s;
+        }
+        return s;
+      } else {
+        return (java.lang.String) ref;
+      }
+    }
+    /**
+     * <code>optional string content = 6;</code>
+     */
+    public com.google.protobuf.ByteString
+        getContentBytes() {
+      java.lang.Object ref = content_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        content_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <code>optional string content = 6;</code>
+     */
+    public Builder setContent(
+        java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000008;
+      content_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>optional string content = 6;</code>
+     */
+    public Builder clearContent() {
+      bitField0_ = (bitField0_ & ~0x00000008);
+      content_ = getDefaultInstance().getContent();
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>optional string content = 6;</code>
+     */
+    public Builder setContentBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000008;
+      content_ = value;
       onChanged();
       return this;
     }

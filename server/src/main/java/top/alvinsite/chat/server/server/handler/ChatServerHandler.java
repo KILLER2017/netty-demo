@@ -1,12 +1,10 @@
 package top.alvinsite.chat.server.server.handler;
 
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
-import io.netty.channel.SimpleChannelInboundHandler;
 import lombok.extern.slf4j.Slf4j;
+import top.alvinsite.chat.common.utils.PacketUtils;
 
 /**
  * 聊天消息处理器
@@ -25,7 +23,7 @@ public class ChatServerHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         log.info("服务器：客户端上线");
-        ctx.writeAndFlush(Unpooled.copiedBuffer(ECHO_REQ.getBytes()));
+        ctx.writeAndFlush(PacketUtils.othersResp(ECHO_REQ));
     }
 
     @Override
@@ -42,8 +40,8 @@ public class ChatServerHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         log.info("收到消息：{}", msg);
-        byte[] req = ((String) msg).getBytes();
-        ctx.writeAndFlush(Unpooled.copiedBuffer(req));
+
+        ctx.writeAndFlush(PacketUtils.privateChatResp("system", "receive message"));
     }
 
     /**

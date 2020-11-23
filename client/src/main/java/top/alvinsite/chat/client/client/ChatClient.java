@@ -12,6 +12,8 @@ import lombok.extern.slf4j.Slf4j;
 import top.alvinsite.chat.client.client.init.ChatClientInitializer;
 import top.alvinsite.chat.client.config.properties.ChatServerProperties;
 import top.alvinsite.chat.common.packets.ChatMessage;
+import top.alvinsite.chat.common.packets.MessageType;
+import top.alvinsite.chat.common.packets.ReceiverType;
 
 /**
  * @author Alvin
@@ -53,14 +55,21 @@ public class ChatClient {
         log.info("聊天客户端关闭成功");
     }
 
-    public void sendMessage(Object object) {
-        byte[] req = ((String)object).getBytes();
-        channel.writeAndFlush(Unpooled.copiedBuffer(req));
+    public void sendMessage(String content) {
+        ChatMessage message = ChatMessage.newBuilder()
+                .setType(MessageType.CHAT_REQ)
+                .setReceiverType(ReceiverType.SYSTEM)
+                .setContent(content)
+                .build();
+        channel.writeAndFlush(message);
     }
 
     public void sendMessage() {
         ChatMessage message = ChatMessage.newBuilder()
-                .setType(2)
+                .setType(MessageType.CHAT_REQ)
+                .setReceiverType(ReceiverType.SYSTEM)
+                .setReceiver("12345678")
+                .setContent("hello")
                 .build();
         channel.writeAndFlush(message);
     }

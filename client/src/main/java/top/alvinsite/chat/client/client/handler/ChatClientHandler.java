@@ -1,12 +1,10 @@
 package top.alvinsite.chat.client.client.handler;
 
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import lombok.extern.slf4j.Slf4j;
-import top.alvinsite.chat.common.packets.ChatMessage;
+import top.alvinsite.chat.common.utils.PacketUtils;
 
 /**
  * 聊天消息处理器
@@ -19,11 +17,7 @@ public class ChatClientHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
         log.info("客户端：已连接服务器");
-        // ByteBuf buf = Unpooled.copiedBuffer("Hello, this is client".getBytes());
-        ChatMessage message = ChatMessage.newBuilder()
-                .setType(1)
-                .build();
-        ctx.writeAndFlush(message);
+        ctx.writeAndFlush(PacketUtils.loginReq("20190090", "candy.123"));
     }
 
     /**
@@ -44,5 +38,11 @@ public class ChatClientHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
         super.channelReadComplete(ctx);
+    }
+
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+        cause.printStackTrace();
+        ctx.close();
     }
 }

@@ -8,11 +8,48 @@ public interface ChatMessageOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>required int32 type = 1;</code>
+   * <code>required .MessageType type = 1;</code>
    */
   boolean hasType();
   /**
-   * <code>required int32 type = 1;</code>
+   * <code>required .MessageType type = 1;</code>
    */
-  int getType();
+  top.alvinsite.chat.common.packets.MessageType getType();
+
+  /**
+   * <code>required .ReceiverType receiverType = 2;</code>
+   */
+  boolean hasReceiverType();
+  /**
+   * <code>required .ReceiverType receiverType = 2;</code>
+   */
+  top.alvinsite.chat.common.packets.ReceiverType getReceiverType();
+
+  /**
+   * <code>optional string receiver = 5;</code>
+   */
+  boolean hasReceiver();
+  /**
+   * <code>optional string receiver = 5;</code>
+   */
+  java.lang.String getReceiver();
+  /**
+   * <code>optional string receiver = 5;</code>
+   */
+  com.google.protobuf.ByteString
+      getReceiverBytes();
+
+  /**
+   * <code>optional string content = 6;</code>
+   */
+  boolean hasContent();
+  /**
+   * <code>optional string content = 6;</code>
+   */
+  java.lang.String getContent();
+  /**
+   * <code>optional string content = 6;</code>
+   */
+  com.google.protobuf.ByteString
+      getContentBytes();
 }

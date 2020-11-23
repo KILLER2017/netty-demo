@@ -1,9 +1,11 @@
 package top.alvinsite.chat.server.server.handler;
 
-import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import lombok.extern.slf4j.Slf4j;
+import top.alvinsite.chat.common.packets.ChatMessage;
+import top.alvinsite.chat.common.packets.MessageType;
+import top.alvinsite.chat.common.utils.PacketUtils;
 
 /**
  * @author Alvin
@@ -22,19 +24,21 @@ public class AuthHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+        ChatMessage message = (ChatMessage) msg;
+
         if (isLogin) {
             ctx.fireChannelRead(msg);
-        } else if ("login".equals(msg)) {
+        } else if (message.getType() == MessageType.LOGIN_REQ) {
             isLogin = true;
             log.info("登录成功");
-            ctx.writeAndFlush(Unpooled.copiedBuffer("登录成功".getBytes()));
-        } else if ("logout".equals(msg)) {
+            ctx.writeAndFlush(PacketUtils.loginResp());
+        } else if (message.getType() == MessageType.LOGOUT_REQ) {
             isLogin = false;
             log.info("注销成功");
-            ctx.writeAndFlush(Unpooled.copiedBuffer("注销成功".getBytes()));
+            ctx.writeAndFlush(PacketUtils.logoutResp());
         } else {
             log.info("未d登录，不往下处理报文. 消息: {}", msg);
-            ctx.writeAndFlush(Unpooled.copiedBuffer("请登录".getBytes()));
+            ctx.writeAndFlush(PacketUtils.othersResp("请先登录"));
         }
 
     }
