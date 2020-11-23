@@ -52,6 +52,26 @@ public class PacketUtils {
     }
 
     /**
+     * 心跳请求包
+     */
+    public static ChatMessage heartbeatReq() {
+        return ChatMessage.newBuilder()
+                .setType(MessageType.HEARTBEAT_REQ)
+                .setReceiverType(ReceiverType.SYSTEM)
+                .build();
+    }
+
+    /**
+     * 心跳响应包
+     */
+    public static ChatMessage heartbeatResp() {
+        return ChatMessage.newBuilder()
+                .setType(MessageType.HEARTBEAT_RESP)
+                .setReceiverType(ReceiverType.SYSTEM)
+                .build();
+    }
+
+    /**
      * 私聊请求包
      */
     public static ChatMessage privateChatReq(String receiver, String content) {

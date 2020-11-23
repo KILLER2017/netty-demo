@@ -3,6 +3,7 @@ package top.alvinsite.chat.client.client;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
@@ -15,6 +16,8 @@ import top.alvinsite.chat.common.packets.ChatMessage;
 import top.alvinsite.chat.common.packets.MessageType;
 import top.alvinsite.chat.common.packets.ReceiverType;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * @author Alvin
  */
@@ -23,6 +26,7 @@ public class ChatClient {
 
     private SocketChannel channel;
 
+    private int reConnectCount = 0;
     @Setter
     private ChatServerProperties chatServerProperties;
 
@@ -47,6 +51,23 @@ public class ChatClient {
         if (future.isSuccess()) {
             log.info("聊天客户端启动成功, connect to {}:{}", chatServerProperties.getHost(), chatServerProperties.getPort());
             channel = (SocketChannel) future.channel();
+            future.channel().closeFuture().addListener((ChannelFutureListener) future1 -> {
+                try {
+                    reConnectCount++;
+                    if (reConnectCount <= 3) {
+                        TimeUnit.SECONDS.sleep(5);
+                        try {
+                            log.info("第{}次尝试重连", reConnectCount);
+                            start();
+                        } catch (Exception e) {
+
+                            // e.printStackTrace();
+                        }
+                    }
+                } catch (Exception e) {
+                    // e.printStackTrace();
+                }
+            });
         }
     }
 

@@ -65,6 +65,4 @@ public class ChatServerHandler extends ChannelInboundHandlerAdapter {
         cause.printStackTrace();
         log.info("未知异常：{}", cause.getMessage());
     }
-
-
 }
