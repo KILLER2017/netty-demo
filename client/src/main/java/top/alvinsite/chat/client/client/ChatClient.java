@@ -1,7 +1,6 @@
 package top.alvinsite.chat.client.client;
 
 import io.netty.bootstrap.Bootstrap;
-import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.EventLoopGroup;
@@ -24,56 +23,48 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class ChatClient {
 
+    private Bootstrap bootstrap;
+
     private SocketChannel channel;
 
-    private int reConnectCount = 0;
-    @Setter
-    private ChatServerProperties chatServerProperties;
+    private ChannelFuture clientFuture;
 
     @Setter
-    private ChatClientInitializer chatClientInitializer;
+    private ChatServerProperties chatServerProperties;
 
     private EventLoopGroup group = new NioEventLoopGroup();
 
 
 
-    public void start() throws InterruptedException {
-        Bootstrap bootstrap = new Bootstrap();
+    public void start() {
+        bootstrap = new Bootstrap();
         bootstrap.group(group)
                 .channel(NioSocketChannel.class)
-                .handler(chatClientInitializer);
+                .handler(new ChatClientInitializer(this));
 
-        ChannelFuture future = bootstrap.connect(
-                chatServerProperties.getHost(),
-                chatServerProperties.getPort()
-        ).sync();
-
-        if (future.isSuccess()) {
-            log.info("聊天客户端启动成功, connect to {}:{}", chatServerProperties.getHost(), chatServerProperties.getPort());
-            channel = (SocketChannel) future.channel();
-            future.channel().closeFuture().addListener((ChannelFutureListener) future1 -> {
-                try {
-                    reConnectCount++;
-                    if (reConnectCount <= 3) {
-                        TimeUnit.SECONDS.sleep(5);
-                        try {
-                            log.info("第{}次尝试重连", reConnectCount);
-                            start();
-                        } catch (Exception e) {
-
-                            // e.printStackTrace();
-                        }
-                    }
-                } catch (Exception e) {
-                    // e.printStackTrace();
-                }
-            });
-        }
+        connect();
     }
 
     public void close() {
         group.shutdownGracefully();
         log.info("聊天客户端关闭成功");
+    }
+
+    public void connect() {
+        if (channel != null && channel.isActive()) {
+            return;
+        }
+
+        clientFuture = bootstrap.connect(chatServerProperties.getHost(), chatServerProperties.getPort());
+        clientFuture.addListener((ChannelFutureListener) future -> {
+            if (future.isSuccess()) {
+                channel = (SocketChannel) future.channel();
+                log.info("connect to server[{}:{}] successfully", chatServerProperties.getHost(), chatServerProperties.getPort());
+            } else {
+                log.info("Failed to connect to server, try connect again after 10s");
+                future.channel().eventLoop().schedule(() -> connect(), 10, TimeUnit.SECONDS);
+            }
+        });
     }
 
     public void sendMessage(String content) {

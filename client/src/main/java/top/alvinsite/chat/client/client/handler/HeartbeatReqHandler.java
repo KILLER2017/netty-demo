@@ -5,6 +5,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.handler.timeout.IdleStateEvent;
 import lombok.extern.slf4j.Slf4j;
+import top.alvinsite.chat.client.client.ChatClient;
 import top.alvinsite.chat.common.packets.ChatMessage;
 import top.alvinsite.chat.common.packets.MessageType;
 import top.alvinsite.chat.common.utils.PacketUtils;
@@ -15,7 +16,13 @@ import top.alvinsite.chat.common.utils.PacketUtils;
 @Slf4j
 public class HeartbeatReqHandler extends ChannelInboundHandlerAdapter {
 
+    private ChatClient client;
+
     private static final ChatMessage HEARTBEAT_PACKET = PacketUtils.heartbeatReq();
+
+    public HeartbeatReqHandler(ChatClient client) {
+        this.client = client;
+    }
 
     @Override
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
@@ -36,5 +43,11 @@ public class HeartbeatReqHandler extends ChannelInboundHandlerAdapter {
         } else {
             ctx.fireChannelRead(msg);
         }
+    }
+
+    @Override
+    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+        log.error("loss connection. attempts to connect to server again");
+        client.connect();
     }
 }

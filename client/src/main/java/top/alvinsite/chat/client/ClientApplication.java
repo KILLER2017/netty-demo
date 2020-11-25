@@ -24,7 +24,6 @@ public class ClientApplication implements CommandLineRunner {
     public void run(String... args) throws Exception {
         ChatClient chatClient = new ChatClient();
         chatClient.setChatServerProperties(chatServerProperties);
-        chatClient.setChatClientInitializer(new ChatClientInitializer());
         chatClient.start();
 
         InputScan inputScan = new InputScan();

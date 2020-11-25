@@ -8,6 +8,7 @@ import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
 import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.timeout.IdleStateHandler;
+import top.alvinsite.chat.client.client.ChatClient;
 import top.alvinsite.chat.client.client.handler.ChatClientHandler;
 import top.alvinsite.chat.client.client.handler.HeartbeatReqHandler;
 import top.alvinsite.chat.common.packets.ChatMessage;
@@ -19,10 +20,12 @@ import java.util.concurrent.TimeUnit;
  */
 public class ChatClientInitializer extends ChannelInitializer<Channel> {
 
-    private ChatClientHandler chatClientHandler;
+    private ChatClient client;
 
-    public ChatClientInitializer() {
-        chatClientHandler = new ChatClientHandler();
+
+
+    public ChatClientInitializer(ChatClient client) {
+        this.client = client;
     }
 
     @Override
@@ -33,7 +36,7 @@ public class ChatClientInitializer extends ChannelInitializer<Channel> {
                 .addLast(new ProtobufDecoder(ChatMessage.getDefaultInstance()))
                 .addLast(new ProtobufVarint32LengthFieldPrepender())
                 .addLast(new ProtobufEncoder())
-                .addLast(new HeartbeatReqHandler())
-                .addLast(chatClientHandler);
+                .addLast(new HeartbeatReqHandler(client))
+                .addLast(new ChatClientHandler());
     }
 }
