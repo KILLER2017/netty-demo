@@ -21,7 +21,7 @@ public class HeartbeatRespHandler extends ChannelInboundHandlerAdapter {
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
         if (evt instanceof IdleStateEvent) {
             // 长时间未和客户端通信，断开连接
-            log.info("长时间未通信，断开客户端连接，{}", ctx);
+            log.info("长时间未通信，断开客户端[{}]连接", ctx.channel().remoteAddress());
             ctx.close();
             // 发送心跳消息，并在发送失败时关闭该连接
             // ctx.writeAndFlush(HEARTBEAT_PACKET).addListener(ChannelFutureListener.CLOSE_ON_FAILURE);
