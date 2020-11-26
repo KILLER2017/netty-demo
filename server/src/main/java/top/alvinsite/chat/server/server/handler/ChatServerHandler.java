@@ -79,5 +79,6 @@ public class ChatServerHandler extends ChannelInboundHandlerAdapter {
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         cause.printStackTrace();
         log.info("未知异常：{}", cause.getMessage());
+        ctx.close();
     }
 }
