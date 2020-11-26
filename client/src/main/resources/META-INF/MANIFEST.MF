@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Main-Class: top.alvinsite.chat.client.ClientApplication
+Class-Path: slf4j-api-1.7.30.jar spring-aop-5.2.9.RELEASE.jar logback-co
+ re-1.2.3.jar spring-boot-configuration-processor-2.3.4.RELEASE.jar jaka
+ rta.annotation-api-1.3.5.jar spring-core-5.2.9.RELEASE.jar spring-jcl-5
+ .2.9.RELEASE.jar jul-to-slf4j-1.7.30.jar spring-context-5.2.9.RELEASE.j
+ ar protobuf-java-3.4.0.jar spring-boot-starter-logging-2.3.4.RELEASE.ja
+ r spring-boot-starter-2.3.4.RELEASE.jar spring-boot-autoconfigure-2.3.4
+ .RELEASE.jar logback-classic-1.2.3.jar spring-expression-5.2.9.RELEASE.
+ jar spring-beans-5.2.9.RELEASE.jar log4j-api-2.13.3.jar snakeyaml-1.26.
+ jar netty-all-4.1.21.Final.jar log4j-to-slf4j-2.13.3.jar spring-boot-2.
+ 3.4.RELEASE.jar lombok-1.18.12.jar
+

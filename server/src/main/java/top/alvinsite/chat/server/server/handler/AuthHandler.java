@@ -36,7 +36,7 @@ public class AuthHandler extends ChannelInboundHandlerAdapter {
                 return;
             }
             isLogin = true;
-            log.info("登录成功");
+            // log.info("登录成功");
 
             String[] result = message.getContent().split("@");
             User user = new User();
