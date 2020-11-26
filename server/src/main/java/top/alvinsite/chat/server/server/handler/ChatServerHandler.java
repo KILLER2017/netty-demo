@@ -73,12 +73,10 @@ public class ChatServerHandler extends ChannelInboundHandlerAdapter {
      * 在读取操作期间， 有异常抛出时会调用
      * @param ctx
      * @param cause
-     * @throws Exception
      */
     @Override
-    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        cause.printStackTrace();
-        log.info("未知异常：{}", cause.getMessage());
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
+        log.info("发生未知异常：{}，断开连接，释放资源，{}", cause.getMessage(), ctx.channel().remoteAddress());
         ctx.close();
     }
 }

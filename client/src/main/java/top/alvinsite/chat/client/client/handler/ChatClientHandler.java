@@ -48,8 +48,8 @@ public class ChatClientHandler extends ChannelInboundHandlerAdapter {
     }
 
     @Override
-    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        cause.printStackTrace();
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
+        log.error("发生未知异常：{}，关闭连接，释放资源：{}", cause.getMessage(), ctx.channel().remoteAddress());
         ctx.close();
     }
 }
