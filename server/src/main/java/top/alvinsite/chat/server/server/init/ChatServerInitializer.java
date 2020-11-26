@@ -11,6 +11,7 @@ import io.netty.handler.timeout.IdleStateHandler;
 import top.alvinsite.chat.common.packets.ChatMessage;
 import top.alvinsite.chat.server.server.handler.AuthHandler;
 import top.alvinsite.chat.server.server.handler.ChatServerHandler;
+import top.alvinsite.chat.server.server.handler.GroupChatReqHandler;
 import top.alvinsite.chat.server.server.handler.HeartbeatRespHandler;
 
 /**
@@ -35,6 +36,7 @@ public class ChatServerInitializer extends ChannelInitializer<Channel> {
                 .addLast(new ProtobufEncoder())
                 .addLast(new AuthHandler())
                 .addLast(new HeartbeatRespHandler())
+                .addLast(new GroupChatReqHandler())
                 .addLast(chatServerHandler);
     }
 }

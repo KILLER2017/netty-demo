@@ -3,8 +3,11 @@ package top.alvinsite.chat.client.client.handler;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.channel.group.ChannelGroup;
 import lombok.extern.slf4j.Slf4j;
 import top.alvinsite.chat.common.utils.PacketUtils;
+
+import java.util.UUID;
 
 /**
  * 聊天消息处理器
@@ -17,7 +20,10 @@ public class ChatClientHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
         log.info("客户端：已连接服务器");
-        ctx.writeAndFlush(PacketUtils.loginReq("20190090", "candy.123"));
+        String username = String.valueOf(UUID.randomUUID());
+        String password = String.valueOf(UUID.randomUUID());
+        ctx.writeAndFlush(PacketUtils.loginReq(username, password));
+        ctx.fireChannelActive();
     }
 
     /**
@@ -28,6 +34,7 @@ public class ChatClientHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
         log.info("收到消息：{}", msg);
+        ctx.fireChannelRead(msg);
     }
 
     /**

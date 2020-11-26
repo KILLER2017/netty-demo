@@ -17,7 +17,7 @@ public class PacketUtils {
         return ChatMessage.newBuilder()
                 .setType(MessageType.LOGIN_REQ)
                 .setReceiverType(ReceiverType.SYSTEM)
-                .setContent(username + "#" + password)
+                .setContent(username + "@" + password)
                 .build();
     }
 
@@ -97,8 +97,33 @@ public class PacketUtils {
 
     /**
      * 群聊请求包
+     * @param receiver 接受方
+     * @param content 消息内容
+     * @return
      */
+    public static ChatMessage groupChatReq(String receiver, String content) {
+        return ChatMessage.newBuilder()
+                .setType(MessageType.CHAT_REQ)
+                .setReceiverType(ReceiverType.GROUP)
+                .setReceiver(receiver)
+                .setContent(content)
+                .build();
+    }
 
+    /**
+     * 群聊响应包
+     * @param sender 发送方
+     * @param content 消息内容
+     * @return
+     */
+    public static ChatMessage groupChatResp(String sender, String content) {
+        return ChatMessage.newBuilder()
+                .setType(MessageType.CHAT_REQ)
+                .setReceiverType(ReceiverType.GROUP)
+                .setReceiver(sender)
+                .setContent(content)
+                .build();
+    }
 
     public static ChatMessage othersResp(String content) {
         return ChatMessage.newBuilder()

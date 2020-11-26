@@ -3,8 +3,16 @@ package top.alvinsite.chat.server.server.handler;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.channel.socket.nio.NioSocketChannel;
 import lombok.extern.slf4j.Slf4j;
+import top.alvinsite.chat.common.model.entity.User;
+import top.alvinsite.chat.common.packets.ChatMessage;
+import top.alvinsite.chat.common.packets.MessageType;
+import top.alvinsite.chat.common.packets.ReceiverType;
 import top.alvinsite.chat.common.utils.PacketUtils;
+import top.alvinsite.chat.server.utils.SessionHolder;
+
+import java.nio.channels.SocketChannel;
 
 /**
  * 聊天消息处理器
@@ -21,14 +29,15 @@ public class ChatServerHandler extends ChannelInboundHandlerAdapter {
 
 
     @Override
-    public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        log.info("服务器：客户端上线");
-        ctx.writeAndFlush(PacketUtils.othersResp(ECHO_REQ));
+    public void channelActive(ChannelHandlerContext ctx) {
+        log.info("服务器：客户端[{}]上线", ctx.channel().remoteAddress());
+        // ctx.writeAndFlush(PacketUtils.othersResp(ECHO_REQ));
     }
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-        log.info("服务器：客户端下线");
+
+        log.info("服务器：客户端[{}]下线", ctx.channel().remoteAddress());
     }
 
     /**
@@ -40,8 +49,14 @@ public class ChatServerHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         log.info("收到消息：{}", msg);
-
-        ctx.writeAndFlush(PacketUtils.privateChatResp("system", "receive message"));
+        ChatMessage message = (ChatMessage) msg;
+        if (message.getType() == MessageType.CHAT_REQ && message.getReceiverType() == ReceiverType.USER) {
+            User user = SessionHolder.getUser((NioSocketChannel) ctx.channel());
+            NioSocketChannel socketChannel = SessionHolder.get(message.getReceiver());
+            assert user != null;
+            socketChannel.writeAndFlush(PacketUtils.privateChatResp(user.getUsername(), message.getContent()));
+        }
+        // ctx.writeAndFlush(PacketUtils.privateChatResp("system", "receive message"));
     }
 
     /**

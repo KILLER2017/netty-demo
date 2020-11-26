@@ -11,10 +11,14 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import top.alvinsite.chat.client.client.init.ChatClientInitializer;
 import top.alvinsite.chat.client.config.properties.ChatServerProperties;
+import top.alvinsite.chat.client.scanner.command.AbstractCommandHandler;
+import top.alvinsite.chat.client.scanner.command.CommandHandler;
 import top.alvinsite.chat.common.packets.ChatMessage;
 import top.alvinsite.chat.common.packets.MessageType;
 import top.alvinsite.chat.common.packets.ReceiverType;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -29,18 +33,28 @@ public class ChatClient {
 
     private ChannelFuture clientFuture;
 
+    private final List<CommandHandler> commandHandlers = new ArrayList<>();
+
+    @Setter
+    private int port;
+
     @Setter
     private ChatServerProperties chatServerProperties;
 
     private EventLoopGroup group = new NioEventLoopGroup();
 
-
+    public ChatClient addHandler(AbstractCommandHandler handler) {
+        commandHandlers.add(handler);
+        handler.setClient(this);
+        return this;
+    }
 
     public void start() {
         bootstrap = new Bootstrap();
         bootstrap.group(group)
                 .channel(NioSocketChannel.class)
-                .handler(new ChatClientInitializer(this));
+                .handler(new ChatClientInitializer(this))
+                .bind(port);
 
         connect();
     }
@@ -76,13 +90,16 @@ public class ChatClient {
         channel.writeAndFlush(message);
     }
 
-    public void sendMessage() {
-        ChatMessage message = ChatMessage.newBuilder()
-                .setType(MessageType.CHAT_REQ)
-                .setReceiverType(ReceiverType.SYSTEM)
-                .setReceiver("12345678")
-                .setContent("hello")
-                .build();
+    public void handlerCommand(String message) {
+        for (CommandHandler handler: commandHandlers) {
+            if (handler.isSupport(message)) {
+                handler.handle(message);
+                break;
+            }
+        }
+    }
+
+    public void sendMessage(ChatMessage message) {
         channel.writeAndFlush(message);
     }
 }

@@ -35,7 +35,7 @@ public class HeartbeatRespHandler extends ChannelInboundHandlerAdapter {
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         ChatMessage message = (ChatMessage) msg;
         if (message.getType() == MessageType.HEARTBEAT_REQ) {
-            log.info("收到心跳请求：{}", message);
+            // log.info("收到心跳请求：{}", message);
             ctx.writeAndFlush(HEARTBEAT_PACKET);
         } else {
             ctx.fireChannelRead(msg);
