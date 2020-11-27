@@ -29,7 +29,7 @@ public class ChatServerInitializer extends ChannelInitializer<Channel> {
     protected void initChannel(Channel channel) {
         channel.pipeline()
                 //11 秒没有向客户端发送消息就发生心跳
-                .addLast(new IdleStateHandler(11, 0, 0))
+                .addLast(new IdleStateHandler(30, 0, 0))
                 .addLast(new ProtobufVarint32FrameDecoder())
                 .addLast(new ProtobufDecoder(ChatMessage.getDefaultInstance()))
                 .addLast(new ProtobufVarint32LengthFieldPrepender())

@@ -33,6 +33,10 @@ public class ChatClient {
 
     private ChannelFuture clientFuture;
 
+    private int reConnectCount = 0;
+
+    private final static int MAX_RECONNECTION_TIMES = 3;
+
     private final List<CommandHandler> commandHandlers = new ArrayList<>();
 
 
@@ -74,6 +78,11 @@ public class ChatClient {
                 log.info("connect to server [{}:{}] successfully", chatServerProperties.getHost(), chatServerProperties.getPort());
             } else {
                 log.error("Failed to connect to server, try connect again after 10s");
+                if (reConnectCount++ > MAX_RECONNECTION_TIMES) {
+                    log.error("尝试最大次数仍无法恢复连接，结束程序");
+                    // close();
+                    return;
+                }
                 future.channel().eventLoop().schedule(() -> connect(), 10, TimeUnit.SECONDS);
             }
         });

@@ -31,13 +31,13 @@ public class ClientApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws InterruptedException {
-        int num = 40;
-        int batch = 500;
+        int num = 3;
+        int batch = 5000;
         for (int i = 1; i <= num; i++) {
             for (int j = 1; j <= batch; j++) {
                 clients.add(createClient());
             }
-            TimeUnit.SECONDS.sleep(10);
+            TimeUnit.SECONDS.sleep(3);
         }
 
         ChatClient chatClient = new ChatClient();
