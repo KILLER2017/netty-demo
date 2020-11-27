@@ -35,13 +35,12 @@ public class ChatClient {
 
     private final List<CommandHandler> commandHandlers = new ArrayList<>();
 
-    @Setter
-    private int port;
+
 
     @Setter
     private ChatServerProperties chatServerProperties;
 
-    private EventLoopGroup group = new NioEventLoopGroup();
+    private static EventLoopGroup group = new NioEventLoopGroup();
 
     public ChatClient addHandler(AbstractCommandHandler handler) {
         commandHandlers.add(handler);
@@ -53,8 +52,7 @@ public class ChatClient {
         bootstrap = new Bootstrap();
         bootstrap.group(group)
                 .channel(NioSocketChannel.class)
-                .handler(new ChatClientInitializer(this))
-                .bind(port);
+                .handler(new ChatClientInitializer(this));
 
         connect();
     }
@@ -73,9 +71,9 @@ public class ChatClient {
         clientFuture.addListener((ChannelFutureListener) future -> {
             if (future.isSuccess()) {
                 channel = (SocketChannel) future.channel();
-                log.info("connect to server[{}:{}] successfully", chatServerProperties.getHost(), chatServerProperties.getPort());
+                log.info("connect to server [{}:{}] successfully", chatServerProperties.getHost(), chatServerProperties.getPort());
             } else {
-                log.info("Failed to connect to server, try connect again after 10s");
+                log.error("Failed to connect to server, try connect again after 10s");
                 future.channel().eventLoop().schedule(() -> connect(), 10, TimeUnit.SECONDS);
             }
         });

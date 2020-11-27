@@ -30,11 +30,14 @@ public class ClientApplication implements CommandLineRunner {
     }
 
     @Override
-    public void run(String... args) {
-        int num = 1000;
+    public void run(String... args) throws InterruptedException {
+        int num = 40;
+        int batch = 500;
         for (int i = 1; i <= num; i++) {
-            int port = 20000 + i;
-            clients.add(createClient(port));
+            for (int j = 1; j <= batch; j++) {
+                clients.add(createClient());
+            }
+            TimeUnit.SECONDS.sleep(10);
         }
 
         ChatClient chatClient = new ChatClient();
@@ -53,9 +56,8 @@ public class ClientApplication implements CommandLineRunner {
         thread.start();
     }
 
-    private ChatClient createClient(int port) {
+    private ChatClient createClient() {
         ChatClient chatClient = new ChatClient();
-        chatClient.setPort(port);
         chatClient.setChatServerProperties(chatServerProperties);
         chatClient.addHandler(new LoginCommandHandler())
                 .addHandler(new LogoutCommandHandler())

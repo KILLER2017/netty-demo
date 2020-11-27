@@ -30,7 +30,7 @@ public class ChatServer {
     }
 
     private EventLoopGroup bossGroup = new NioEventLoopGroup();
-    private EventLoopGroup workerGroup = new NioEventLoopGroup();
+    private EventLoopGroup workerGroup = new NioEventLoopGroup(6);
 
     /**
      * 启动聊天服务器

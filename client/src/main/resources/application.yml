@@ -4,5 +4,5 @@ spring:
 
 chat:
   server:
-    host: 172.31.40.7
+    host: 172.31.200.19
     port: 12345
